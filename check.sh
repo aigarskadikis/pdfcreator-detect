@@ -229,7 +229,7 @@ link=$(echo http://download.pdfforge.org/download/pdfcreator/PDFCreator-stable?d
 wget -S --spider -o $tmp/output.log $link
 
 #start basic check if the page even have the right content
-grep "http.*PDFCreator.*exe" $tmp/output.log
+grep "http.*PDFCreator.*exe" $tmp/output.log > /dev/null
 if [ $? -eq 0 ]; then
 
 #take the first link which starts with http and ends with exe
@@ -265,6 +265,15 @@ echo "$filename">> $db
 echo "$md5">> $db
 echo "$sha1">> $db
 
+#if google drive config exists then upload and delete file:
+if [ -f "../gd/$appname.cfg" ]
+then
+echo Uploading $filename to Google Drive..
+echo Make sure you have created \"$appname\" direcotry inside it!
+../uploader.py "../gd/$appname.cfg" "$tmp/$filename"
+echo
+fi
+
 #lets send emails to all people in "posting" file
 emails=$(cat ../posting | sed '$aend of file')
 printf %s "$emails" | while IFS= read -r onemail
@@ -283,7 +292,7 @@ else
 emails=$(cat ../maintenance | sed '$aend of file')
 printf %s "$emails" | while IFS= read -r onemail
 do {
-python ../send-email.py "$onemail" "To Do List" "The following link do not longer retrieves installer: 
+python ../send-email.py "$onemail" "To Do List" "The following link do not longer retreive installer: 
 $link"
 } done
 
