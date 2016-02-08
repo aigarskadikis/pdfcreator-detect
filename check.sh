@@ -230,7 +230,7 @@ wget -S --spider -o $tmp/output.log $link
 
 #start basic check if the page even have the right content
 grep "http.*PDFCreator.*exe" $tmp/output.log
-if [ $? -ne 0 ]; then
+if [ $? -eq 0 ]; then
 
 #take the first link which starts with http and ends with exe
 url=$(sed "s/http/\nhttp/g" $tmp/output.log | \
@@ -283,7 +283,7 @@ else
 emails=$(cat ../maintenance | sed '$aend of file')
 printf %s "$emails" | while IFS= read -r onemail
 do {
-python ../send-email.py "$onemail" "To Do List" "The following linke do not longer retrieves installer: 
+python ../send-email.py "$onemail" "To Do List" "The following link do not longer retrieves installer: 
 $link"
 } done
 
