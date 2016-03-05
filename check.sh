@@ -74,7 +74,7 @@ grep "^http.*exe$" | head -1)
 filename=$(echo $url | sed "s/^.*\///g")
 
 #check if this link is in database
-grep "$filename" $db > /dev/null
+grep "$filename" $db
 if [ $? -ne 0 ]
 then
 echo new version detected!
